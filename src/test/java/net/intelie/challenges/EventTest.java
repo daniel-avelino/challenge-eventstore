@@ -1,67 +1,88 @@
 package net.intelie.challenges;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
+
+import org.junit.Test;
 
 public class EventTest {
 
 	EventServices services = new EventServices();
+
 	EventIteratorService eventIterator = new EventIteratorService(services.findAll());
 
-	Event event = new Event("some_type", 123L);
-	Event event2 = new Event("some_type2", 1235L);
-	Event event3 = new Event("some_type", 1234567L);
-
+	//The function insertEvents(), inserts 5 events using the method "insert" from the implementation of EventStore in EventServices;
 	@Test
-	public void thisIsAWarning() throws Exception {
-		Event event = new Event("some_type", 123L);
-
-		// THIS IS A WARNING:
-		// Some of us (not everyone) are coverage freaks.
-		assertEquals(123L, event.timestamp());
-		assertEquals("some_type", event.type());
+	public void insertShouldInsertNewEventsInEventStore() throws Exception {
+		insertEvents();
+		assertEquals(5, services.findAll().size());
 	}
 
-	@Test
-	public void insertShouldInsertNewEventInEventStore() throws Exception {
-		services.insert(event);
-		assertEquals(1, services.findAll().size());
-	}
-
+	/**	First insert 5 events, then using removeAll() to remove all events which have "Party" in the type. 
+	*   Ignoring if the type is on upper case or lower case. From the 5 events, there is 2 events with type "Party". 
+	* 	So the expected remaining events should be 3 events. 
+	**/
 	@Test
 	public void removeAllShouldRemoveAllEventsOfType() {
-		services.insert(event);
-		services.insert(event);
-		services.insert(event2);
+		insertEvents();
+		assertEquals(5, services.findAll().size());
 
+		services.removeAll("Party");
 		assertEquals(3, services.findAll().size());
-
-		services.removeAll("some_type");
-		assertEquals(1, services.findAll().size());
 	}
 
+	/** First insert 5 events, then using the query function implemented in EventServices from EventStore 
+	 *  should return just events of the type and in the range of the timestamp, considering the startTime includes and
+	 *  the endTime excludes from that search.
+	 * 	The iterator.moveNext() is a boolean which returns TRUE if the query found at least 1 event in the eventStore.
+	 *  The second assert ensure that event type found is the event type desired.
+	 *  The iterator.remove() should remove the current event, 
+	 *  so if the current event was removed, the iterator.current() should throw a illegalStateException.
+	 *  If the query found just 1 event, the iterator.moveNext() should return false, because there isn't no more events to return.
+	 **/
 	@Test
 	public void queryShouldReturnEventsByTypeAndTimestamp() {
-		services.insert(event2);
-		services.insert(event);
-		services.insert(event3);
-
-
-		EventIterator iterator = services.query("some_type", 123L, 123456L);
+		insertEvents();
+		EventIterator iterator = services.query("Soccer game", 1L, 5L);
 
 		assertEquals(true, iterator.moveNext());
-		
-		assertEquals("some_type", iterator.current().type());
-		System.out.println(iterator.toString());
+
+		assertEquals("Soccer Game", iterator.current().type());
+
 		iterator.remove();
 		assertThrows(IllegalStateException.class, () -> {
 			iterator.current();
 		});
-		System.out.println(iterator.toString());
 
-		assertEquals(false, iterator.moveNext());	
+		assertEquals(false, iterator.moveNext());
 
 	}
+	
+	/* This test tries remove a non existing event, so the expected result is that nothing happens
+	 * 
+	 */
+	@Test
+	public void removeAllShouldDoNothingIfTypeDoesntExist() {
+		insertEvents();
+		services.removeAll("NonExistingEvent");
+		assertEquals(5,services.findAll().size());
+	}
+
+
+	public void insertEvents() {
+
+		Event event = new Event("Party", 1L);
+		Event event2 = new Event("Soccer Game", 2L);
+		Event event3 = new Event("Basketball Game", 3L);
+		Event event4 = new Event("PARTY", 4L);
+		Event event5 = new Event("Show", 5L);
+
+		services.insert(event);
+		services.insert(event2);
+		services.insert(event3);
+		services.insert(event4);
+		services.insert(event5);
+
+	}
+
 }

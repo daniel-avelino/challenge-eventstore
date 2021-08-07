@@ -17,7 +17,7 @@ public class EventIteratorService implements EventIterator {
 	}
 
 	@Override
-	public boolean moveNext() throws IllegalStateException {
+	public boolean moveNext() {
 		return this.eventsIterator.hasNext();
 	}
 

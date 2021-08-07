@@ -8,14 +8,13 @@ public class EventServices implements EventStore {
 
 	List<Event> events = new ArrayList<>();
 
-
 	@Override
 	public void insert(Event event) {
 		events.add(event);
 	}
 
 	@Override
-	public void removeAll(String type) {
+	public synchronized void removeAll(String type) {
 		events.removeIf(x -> x.type().equalsIgnoreCase(type));
 	}
 
@@ -35,7 +34,6 @@ public class EventServices implements EventStore {
 		eventsIterator = events.stream()
 				.filter(x -> x.type().equalsIgnoreCase(type) && x.timestamp() < endTime && x.timestamp() >= startTime)
 				.collect(Collectors.toList());
-
 		return eventsIterator;
 	}
 
