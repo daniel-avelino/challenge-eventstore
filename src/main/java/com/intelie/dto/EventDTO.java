@@ -2,12 +2,18 @@ package com.intelie.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class EventDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+
+	@NotBlank(message = "Insert an event type.")
 	private String type;
+	@NotNull(message = "Insert a timestamp to the event.")
 	private Long timestamp;
 
 	public EventDTO() {

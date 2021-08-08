@@ -10,13 +10,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tb_events")
-public class Event implements Serializable{
+public class Event implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String type;
 	private Long timestamp;
 

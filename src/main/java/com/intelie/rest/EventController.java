@@ -1,5 +1,7 @@
 package com.intelie.rest;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,20 +30,21 @@ public class EventController {
 
 	@GetMapping(path = "/search")
 	public ResponseEntity<?> searchQuery(@RequestParam("type") String type, @RequestParam("start_time") long startTime,
-			@RequestParam("end_time") long endTime) {
+			@RequestParam("end_time") long endTime){
 		return ResponseEntity.ok().body(services.queryEvents(type, startTime, endTime));
 	}
 
 	@PostMapping
-	public ResponseEntity<?> createEvent(@RequestBody EventDTO eventRequest) {
+	public ResponseEntity<?> createEvent(@Valid @RequestBody EventDTO eventRequest) {
 		services.insertEvent(eventRequest);
-		return new ResponseEntity<>(HttpStatus.CREATED).ok().body("Event " + eventRequest.getType() +" was created.");
+		new ResponseEntity<>(HttpStatus.CREATED);
+		return ResponseEntity.ok().body("Event " + eventRequest.getType() + " was created.");
 	}
 
 	@DeleteMapping
 	public ResponseEntity<?> deleteEventsByType(@RequestParam("type") String type) {
 		services.deleteEventsByType(type);
-		return ResponseEntity.ok().body("Events of type: " + type + " were deleted with success!" );
+		return ResponseEntity.ok().body("Events of type: " + type + " were deleted with success!");
 	}
 
 }
