@@ -2,6 +2,8 @@ package com.intelie.services;
 
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +32,21 @@ public class EventService {
 	}
 
 	@Transactional
-	public void deleteEventsByType(String type) {
-		repository.deleteEventsByType(type);
+	public void deleteEventsByType(String type) throws Exception {
+		int deletedEvents = repository.deleteEventsByType(type);
+		if (deletedEvents == 0) {
+			throw new EntityNotFoundException("Event not found.");
+		}
+
 	}
 
 	@Transactional(readOnly = true)
 	public List<EventDTO> queryEvents(String type, long startTime, long endTime) {
-		return mapper.toEventDTOlist(repository.findEventsQuery(type, startTime, endTime));
+		List<EventDTO> eventsDTO = mapper.toEventDTOlist(repository.findEventsQuery(type, startTime, endTime));
+		if (eventsDTO.isEmpty()) {
+			throw new EntityNotFoundException("Events not found.");
+		}
+		return eventsDTO;
 	}
 
 }

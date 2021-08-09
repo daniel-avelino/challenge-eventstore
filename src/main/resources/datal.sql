@@ -1,0 +1,1 @@
+INSERT into tb_events values ('1L','Party','1L')
