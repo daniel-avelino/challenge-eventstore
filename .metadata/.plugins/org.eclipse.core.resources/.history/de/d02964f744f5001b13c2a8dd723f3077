@@ -1,0 +1,67 @@
+package net.intelie.challenges;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
+import java.time.LocalTime;
+
+import org.junit.Test;
+
+public class EventTest {
+
+	EventServices services = new EventServices();
+
+	EventIteratorService eventIterator = new EventIteratorService(services.findAll());
+
+	@Test
+	public void insertShouldInsertNewEventInEventStore() throws Exception {
+		insertEvents();
+		assertEquals(5, services.findAll().size());
+	}
+
+	@Test
+	public void removeAllShouldRemoveAllEventsOfType() {
+		insertEvents();
+
+		assertEquals(5, services.findAll().size());
+
+		services.removeAll("Party");
+		assertEquals(3, services.findAll().size());
+	}
+
+	@Test
+	public void queryShouldReturnEventsByTypeAndTimestamp() {
+		insertEvents();
+		EventIterator iterator = services.query("party", 1628095691000L, 1628106911000L);
+
+		assertEquals(true, iterator.moveNext());
+
+		assertEquals("Soccer Game", iterator.current().type());
+
+		iterator.remove();
+		assertThrows(IllegalStateException.class, () -> {
+			iterator.current();
+		});
+
+		assertEquals(false, iterator.moveNext());
+
+	}
+
+	public void insertEvents() {
+		LocalTime time = LocalTime.now(); // Gets the current time
+
+		Event event = new Event("Party", 1628095691000L);
+		Event event2 = new Event("Soccer Game", 1628099291000L);
+		Event event3 = new Event("Basketball Game", 1628102891000L);
+		Event event4 = new Event("PARTY", 1628106491000L);
+		Event event5 = new Event("Show", 1628106911000L);
+
+		services.insert(event);
+		services.insert(event2);
+		services.insert(event3);
+		services.insert(event4);
+		services.insert(event5);
+
+	}
+
+}

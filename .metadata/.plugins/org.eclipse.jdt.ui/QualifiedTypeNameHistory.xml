@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="net.intelie.challenges.EventStore"/>
+    <fullyQualifiedTypeName name="java.util.Collections"/>
+    <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+    <fullyQualifiedTypeName name="net.intelie.challenges.EventIterator"/>
+    <fullyQualifiedTypeName name="java.util.List"/>
+    <fullyQualifiedTypeName name="org.junit.Test"/>
+    <fullyQualifiedTypeName name="java.lang.reflect.Array"/>
+    <fullyQualifiedTypeName name="java.sql.Array"/>
+    <fullyQualifiedTypeName name="net.intelie.challenges.EventServices"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="net.intelie.challenges.EventIteratorService"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.atomic.AtomicInteger"/>
+    <fullyQualifiedTypeName name="java.lang.IllegalStateException"/>
+    <fullyQualifiedTypeName name="java.util.Date"/>
+    <fullyQualifiedTypeName name="java.util.Calendar"/>
+    <fullyQualifiedTypeName name="org.junit.Before"/>
+</qualifiedTypeNameHistroy>

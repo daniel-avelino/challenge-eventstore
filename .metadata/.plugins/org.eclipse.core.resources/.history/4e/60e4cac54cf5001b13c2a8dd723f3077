@@ -1,0 +1,76 @@
+package net.intelie.challenges;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
+
+import org.junit.Test;
+
+public class EventTest {
+
+	EventServices services = new EventServices();
+
+	EventIteratorService eventIterator = new EventIteratorService(services.findAll());
+
+	//The function insertEvents(), inserts 5 events using the method "insert" from the implementation of EventStore in EventServices;
+	@Test
+	public void insertShouldInsertNewEventsInEventStore() throws Exception {
+		insertEvents();
+		assertEquals(5, services.findAll().size());
+	}
+
+	/**	First insert 5 events, then using removeAll() to remove all events which have "Party" in the type. 
+	*   Ignoring if the type is on upper case or lower case. From the 5 events, there is 2 events with type "Party". 
+	* 	So the expected remaining events should be 3 events. 
+	**/
+	@Test
+	public void removeAllShouldRemoveAllEventsOfType() {
+		insertEvents();
+		assertEquals(5, services.findAll().size());
+
+		services.removeAll("Party");
+		assertEquals(3, services.findAll().size());
+	}
+
+	/** First insert 5 events, then using the query function implemented in EventServices from EventStore 
+	 *  should return just events of the type and in the range of the timestamp, considering the startTime includes and
+	 *  the endTime excludes from that search.
+	 * 	The iterator.moveNext() is a boolean which returns TRUE if the query found at least 1 event in the eventStore.
+	 *  The second assert ensure that event type found is the event type desired.
+	 *  The iterator.remove() should remove the current event from eventStore
+	 **/
+	@Test
+	public void queryShouldReturnEventsByTypeAndTimestamp() {
+		insertEvents();
+		EventIterator iterator = services.query("Soccer game", 1L, 5L);
+
+		assertEquals(true, iterator.moveNext());
+
+		assertEquals("Soccer Game", iterator.current().type());
+
+		iterator.remove();
+		assertEquals(0,services.findAll().size());
+		assertThrows(IllegalStateException.class, () -> {
+			iterator.current();
+		});
+
+		assertEquals(false, iterator.moveNext());
+
+	}
+
+	public void insertEvents() {
+
+		Event event = new Event("Party", 1L);
+		Event event2 = new Event("Soccer Game", 2L);
+		Event event3 = new Event("Basketball Game", 3L);
+		Event event4 = new Event("PARTY", 4L);
+		Event event5 = new Event("Show", 5L);
+
+		services.insert(event);
+		services.insert(event2);
+		services.insert(event3);
+		services.insert(event4);
+		services.insert(event5);
+
+	}
+
+}
