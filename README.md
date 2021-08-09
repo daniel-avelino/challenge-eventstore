@@ -1,5 +1,13 @@
 # Implement EventStore
 
+To solve this challenge was created two branches "Java" and "SpringBoot".
+
+The branch Java has the implementention following the requirements of the challenge, with a simple implementation.
+
+The branch SpringBoot has a implementation of a similar project, which one has the same idea, but using Springboot to build a REST API to solve the challenge, with an database in memory (H2), JPA, Swagger, Validations, ControllerAdvice to catch the exceptions. In resume the API has an endpoint to create a new event, another one to delete the events, a endpoint to return all events stored and a last one to search with the specifications as a query given in the challenge.
+
+-----------------------------------------------------------------------------
+
 In this challenge, you will create a class that implements the `EventStore` 
 interface.
  
@@ -51,6 +59,3 @@ with your changes.
 If you are already in the hiring process, you may send it to 
  whoever is your contact at Intelie. If you wish to apply for a job at 
  Intelie, please send your solution to [trabalhe@intelie.com.br](mailto:trabalhe@intelie.com.br).
-
-
-Testing git
