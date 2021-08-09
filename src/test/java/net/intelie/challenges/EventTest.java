@@ -13,15 +13,15 @@ public class EventTest {
 
 	EventIteratorService eventIterator = new EventIteratorService(services.findAll());
 
-	// The function insertEvents(), inserts 5 events using the method "insert" from
-	// the implementation of EventStore in EventServices;
+	// The setUp with annotation @Before includes 5 new events in the store, here it's verifying if  
+	// exists 5 events int the store like expected.
 	@Test
 	public void insertShouldInsertNewEventsInEventStore() throws Exception {
 		assertEquals(5, services.findAll().size());
 	}
 
 	/**
-	 * First insert 5 events, then using removeAll() to remove all events which have
+	 * Using removeAll() to remove all events which have
 	 * "Party" in the type. Ignoring if the type is on upper case or lower case.
 	 * From the 5 events, there is 2 events with type "Party". So the expected
 	 * remaining events should be 3 events.
@@ -35,7 +35,7 @@ public class EventTest {
 	}
 
 	/**
-	 * First insert 5 events, then using the query function implemented in
+	 * Using the query function implemented in
 	 * EventServices from EventStore should return just events of the type and in
 	 * the range of the timestamp, considering the startTime includes and the
 	 * endTime excludes from that search. The iterator.moveNext() is a boolean which
@@ -73,7 +73,11 @@ public class EventTest {
 		services.removeAll("NonExistingEvent");
 		assertSame(services.findAll(), services.findAll());
 	}
-
+	
+	/*
+	 * This will run before the tests, including 5 events in store
+	 * 
+	 */
 	@Before
 	public void setUp() {
 		services.insert(new Event("Party", 1L));
